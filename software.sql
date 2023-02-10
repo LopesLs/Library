@@ -1,7 +1,7 @@
 -------------------------- Criação ------------------------------
 
 -- Criação da tabela leitor
-CREATE TABLE Leitor (CPF VARCHAR(11), nome VARCHAR(20),
+CREATE TABLE Leitor (cpf VARCHAR(11), nome VARCHAR(20),
 telefone VARCHAR(14), endereco VARCHAR(20),
 PRIMARY KEY(CPF));
 
@@ -12,8 +12,8 @@ dataLancamento DATE,
 PRIMARY KEY (titulo));
 
 -- Criação da tabela LivroAlugado
-CREATE TABLE LivroAlugado (CPFLeitor VARCHAR(11), tituloLivro VARCHAR(30), prazoEntrega DATETIME,
-FOREIGN KEY (CPFLeitor) REFERENCES Leitor(CPF) ON DELETE CASCADE ON UPDATE CASCADE,
+CREATE TABLE LivroAlugado (cpfLeitor VARCHAR(11), tituloLivro VARCHAR(30), prazoEntrega DATETIME,
+FOREIGN KEY (CPFLeitor) REFERENCES Leitor(cpf) ON DELETE CASCADE ON UPDATE CASCADE,
 FOREIGN KEY (tituloLivro) REFERENCES Livro(titulo) ON DELETE CASCADE ON UPDATE CASCADE);
 
 -------------------------- Trigger ---------------------------
@@ -31,10 +31,10 @@ END$
 -------------------------- Inserção ------------------------------
 
 -- Inserção de dados na tabela Leitor
-INSERT INTO Leitor (CPF, nome, telefone, endereco)
+INSERT INTO Leitor (cpf, nome, telefone, endereco)
 VALUES ('12345678901', 'Carlos Lopes', '11 99999-9999', 'Rua A, 123');
 
-INSERT INTO Leitor (CPF, nome, telefone, endereco)
+INSERT INTO Leitor (cpf, nome, telefone, endereco)
 VALUES ('10987654321', 'Karollis', '11 88888-8888', 'Rua B, 456');
 
 -- Inserção de dados na tabela Livro
@@ -45,10 +45,10 @@ INSERT INTO Livro (titulo, autor, genero, quantidade, editora, dataLancamento)
 VALUES ('O Morro dos Ventos Uivantes', 'Emily Bronte', 'Romance', 5, 'Editora Y', '1847-12-18');
 
 -- Inserção de dados na tabela LivroAlugado
-INSERT INTO LivroAlugado (CPFLeitor, tituloLivro)
+INSERT INTO LivroAlugado (cpfLeitor, tituloLivro)
 VALUES ('12345678901', 'O Pequeno Príncipe');
 
-INSERT INTO LivroAlugado (CPFLeitor, tituloLivro)
+INSERT INTO LivroAlugado (cpfLeitor, tituloLivro)
 VALUES ('10987654321', 'O Morro dos Ventos Uivantes');
 
 -------------------------- Remoção ------------------------------
@@ -65,13 +65,13 @@ DELETE FROM LivroAlugado WHERE cpf = 'Mycpf' IF EXISTS;
 -------------------------- Atualização ---------------------------
 
 -- Atualização de dados na tabela Leitor
-UPDATE Leitor SET nome = 'Novo Nome', telefone = 'Novo Telefone', endereco = 'Novo Endereco' WHERE CPF = '12345678901';
+UPDATE Leitor SET nome = 'Novo Nome', telefone = 'Novo Telefone', endereco = 'Novo Endereco' WHERE cpf = '12345678901';
 
 -- Atualização de dados na tabela Livro
 UPDATE Livro SET autor = 'Novo Autor', genero = 'Novo Gênero', quantidade = 5, editora = 'Nova Editora', dataLancamento = '2023-01-01' WHERE titulo = 'Livro 1';
 
 -- Atualização de dados na tabela LivroAlugados
-UPDATE LivroAlugados SET CPFLeitor = '10987654321' WHERE tituloLivro = 'Livro 1';
+UPDATE LivroAlugados SET cpfLeitor = '10987654321' WHERE tituloLivro = 'Livro 1';
 
 -------------------------- Inner Join ---------------------------
 
@@ -79,6 +79,6 @@ UPDATE LivroAlugados SET CPFLeitor = '10987654321' WHERE tituloLivro = 'Livro 1'
 SELECT Leitor.nome, Livro.titulo
 FROM Leitor
 INNER JOIN LivroAlugado
-ON Leitor.CPF = LivroAlugado.CPFLeitor
+ON Leitor.cpf = LivroAlugado.cpfLeitor
 INNER JOIN Livro
 ON LivroAlugado.tituloLivro = Livro.titulo;
