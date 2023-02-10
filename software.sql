@@ -1,26 +1,45 @@
 -------------------------- Criação ------------------------------
 
 -- Criação da tabela leitor
-CREATE TABLE Leitor (CPF PRIMARY KEY VARCHAR(11), nome VARCHAR(20), telefone VARCHAR(14), endereco VARCHAR(20));
+CREATE TABLE Leitor (CPF VARCHAR(11), nome VARCHAR(20),
+telefone VARCHAR(14), endereco VARCHAR(20),
+PRIMARY KEY(CPF));
 
 -- Criação da tabela Livro
-CREATE TABLE Livro (titulo PRIMARY KEY VARCHAR(20), autor VARCHAR(20), genero VARCHAR(15), quantidade INT, editora VARCHAR(20), dataLancamento DATE);
+CREATE TABLE Livro (titulo VARCHAR(30), autor VARCHAR(20),
+genero VARCHAR(30), quantidade INT, editora VARCHAR(20),
+dataLancamento DATE,
+PRIMARY KEY (titulo));
 
 -- Criação da tabela LivroAlugado
-CREATE TABLE LivroAlugado (CPFLeitor VARCHAR(11) REFERENCES Leitor(CPF), tituloLivro VARCHAR(20) REFERENCES Livro(titulo));
+CREATE TABLE LivroAlugado (CPFLeitor VARCHAR(11), tituloLivro VARCHAR(30), prazoEntrega DATETIME,
+FOREIGN KEY (CPFLeitor) REFERENCES Leitor(CPF) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (tituloLivro) REFERENCES Livro(titulo) ON DELETE CASCADE ON UPDATE CASCADE);
+
+-------------------------- Trigger ---------------------------
+
+-- Trigger que define o prazoEntrega na tabela Leitor sempre que houver uma inserção na tabela LivroAlugado
+DELIMITER $
+
+CREATE TRIGGER trPrazoEntrega
+BEFORE INSERT ON LivroAlugado
+FOR EACH ROW
+BEGIN
+    SET NEW.prazoEntrega = DATE_ADD(NOW(), INTERVAL 15 DAY);
+END$
 
 -------------------------- Inserção ------------------------------
 
 -- Inserção de dados na tabela Leitor
 INSERT INTO Leitor (CPF, nome, telefone, endereco)
-VALUES ('12345678901', 'João Silva', '11 99999-9999', 'Rua A, 123');
+VALUES ('12345678901', 'Carlos Lopes', '11 99999-9999', 'Rua A, 123');
 
 INSERT INTO Leitor (CPF, nome, telefone, endereco)
-VALUES ('10987654321', 'Maria Rodriguez', '11 88888-8888', 'Rua B, 456');
+VALUES ('10987654321', 'Karollis', '11 88888-8888', 'Rua B, 456');
 
 -- Inserção de dados na tabela Livro
 INSERT INTO Livro (titulo, autor, genero, quantidade, editora, dataLancamento)
-VALUES ('O Pequeno Príncipe', 'Antoine de Saint-Exupéry', 'Infanto-juvenil', 10, 'Editora X', '1943-04-06');
+VALUES ('O Pequeno Príncipe', 'Antoine', 'Literatura Infantil', 10, 'Editora X', '1943-04-06');
 
 INSERT INTO Livro (titulo, autor, genero, quantidade, editora, dataLancamento)
 VALUES ('O Morro dos Ventos Uivantes', 'Emily Bronte', 'Romance', 5, 'Editora Y', '1847-12-18');
@@ -28,7 +47,6 @@ VALUES ('O Morro dos Ventos Uivantes', 'Emily Bronte', 'Romance', 5, 'Editora Y'
 -- Inserção de dados na tabela LivroAlugado
 INSERT INTO LivroAlugado (CPFLeitor, tituloLivro)
 VALUES ('12345678901', 'O Pequeno Príncipe');
-
 
 INSERT INTO LivroAlugado (CPFLeitor, tituloLivro)
 VALUES ('10987654321', 'O Morro dos Ventos Uivantes');
@@ -54,3 +72,13 @@ UPDATE Livro SET autor = 'Novo Autor', genero = 'Novo Gênero', quantidade = 5, 
 
 -- Atualização de dados na tabela LivroAlugados
 UPDATE LivroAlugados SET CPFLeitor = '10987654321' WHERE tituloLivro = 'Livro 1';
+
+-------------------------- Inner Join ---------------------------
+
+-- Selecionando nome de quem alugou o livro e titulo do alugado
+SELECT Leitor.nome, Livro.titulo
+FROM Leitor
+INNER JOIN LivroAlugado
+ON Leitor.CPF = LivroAlugado.CPFLeitor
+INNER JOIN Livro
+ON LivroAlugado.tituloLivro = Livro.titulo;
