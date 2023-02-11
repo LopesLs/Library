@@ -54,24 +54,27 @@ VALUES ('10987654321', 'O Morro dos Ventos Uivantes');
 -------------------------- Remoção ------------------------------
 
 -- Removendo da tabela leitor pelo identificador cpf
-DELETE FROM Leitor WHERE CPF = 'Mycpf' IF EXISTS;
+DELETE FROM Leitor WHERE cpf = '12345678901';
 
 -- Removendo da tabela livro pelo identificador Livro
-DELETE FROM Livro WHERE titulo = 'mytitle' IF EXISTS;
+DELETE FROM Livro WHERE titulo = 'O Pequeno Príncipe';
 
 -- Removendo da tabela LivroAlugado
-DELETE FROM LivroAlugado WHERE cpf = 'Mycpf' IF EXISTS;
+DELETE FROM LivroAlugado WHERE cpfLeitor = '10987654321';
 
 -------------------------- Atualização ---------------------------
 
 -- Atualização de dados na tabela Leitor
-UPDATE Leitor SET nome = 'Novo Nome', telefone = 'Novo Telefone', endereco = 'Novo Endereco' WHERE cpf = '12345678901';
+UPDATE Leitor SET nome = 'Novo Nome', telefone = 'Novo Telefone', endereco = 'Novo Endereco'
+WHERE cpf = '12345678901';
 
 -- Atualização de dados na tabela Livro
-UPDATE Livro SET autor = 'Novo Autor', genero = 'Novo Gênero', quantidade = 5, editora = 'Nova Editora', dataLancamento = '2023-01-01' WHERE titulo = 'Livro 1';
+UPDATE Livro SET autor = 'Novo Autor', genero = 'Novo Gênero', quantidade = 5, editora = 'Nova Editora', dataLancamento = '2023-01-01'
+WHERE titulo = 'Livro 1';
 
 -- Atualização de dados na tabela LivroAlugados
-UPDATE LivroAlugados SET cpfLeitor = '10987654321' WHERE tituloLivro = 'Livro 1';
+UPDATE LivroAlugado SET cpfLeitor = '10987654321'
+WHERE tituloLivro = 'Livro 1';
 
 -------------------------- Inner Join ---------------------------
 
